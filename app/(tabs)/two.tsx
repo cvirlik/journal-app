@@ -11,7 +11,7 @@ export default function TabTwoScreen() {
       lastActivityTime: '2024-12-05T08:00:00',
       lastActivityLog: 'Living life',
       location: 'New York',
-      battery: 85,
+      battery: 12,
       active: true,
     },
     {
@@ -39,6 +39,7 @@ export default function TabTwoScreen() {
       active: false,
     },
   ];
+  const sortedData = [...mockData].sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
   return (
     <RichView
       primaryChildren={
@@ -48,7 +49,7 @@ export default function TabTwoScreen() {
       }
       secondaryChildren={
         <View style={styles.container}>
-          {mockData.map((person, index) => (
+          {sortedData.map((person, index) => (
             <PersonCard key={index} {...person} />
           ))}
         </View>

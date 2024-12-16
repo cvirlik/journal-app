@@ -2,12 +2,11 @@ import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import 'react-native-reanimated';
 
+import { ThemeProvider } from '@/providers/ThemeProvider';
 import { SelectedUserProvider } from '@/providers/SelectedUserProvider';
-import { useColorScheme } from '@/components/useColorScheme';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,14 +46,16 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider>
       <SelectedUserProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="call-modal" options={{ presentation: 'modal', headerShown: false }} />
+          <Stack.Screen
+            name="call-screen"
+            options={{ presentation: 'modal', headerShown: false }}
+          />
           <Stack.Screen
             name="confirmation-modal"
             options={{ presentation: 'modal', headerShown: false }}

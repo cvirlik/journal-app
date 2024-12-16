@@ -4,12 +4,14 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useTheme } from '@/providers/ThemeProvider';
 import { useSelectedUser } from '@/providers/SelectedUserProvider';
 import { View } from '@/components/Themed';
 import { RichButton } from '@/components/RichButton';
 
 export default function CallModal() {
-  const { profile, set } = useSelectedUser();
+  const theme = useTheme().theme;
+  const { profile } = useSelectedUser();
   const name = profile?.name;
   return (
     <Animated.View
@@ -18,7 +20,7 @@ export default function CallModal() {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#A1A3F6',
+        backgroundColor: theme.colors.modalBackground,
         paddingHorizontal: 32,
       }}
     >
@@ -60,23 +62,20 @@ export default function CallModal() {
         </View>
         <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
           <RichButton
-            icon={<Ionicons name="close-sharp" size={20} color={'#464AB7'} />}
+            icon={<Ionicons name="close-sharp" size={20} color={theme.colors.tintPrimary} />}
             title="zrušit"
-            colorText="#464AB7"
-            color="#464AB7"
+            colorText={theme.colors.tintPrimary}
+            color={theme.colors.tintPrimary}
             filled={false}
             link="two"
-            // onPress={() => {
-            //   set(null);
-            // }}
           />
           <RichButton
             icon={<Ionicons name="call" size={20} color={'#fff'} />}
             title="zavolat"
             colorText="#fff"
-            color="#464AB7"
+            color={theme.colors.tintPrimary}
             filled
-            link="two"
+            link="call-screen"
           />
         </View>
       </View>

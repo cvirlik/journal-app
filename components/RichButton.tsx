@@ -42,7 +42,14 @@ export function RichButton(props: RichButtonProps) {
         }}
       >
         {props.icon}
-        <Text style={{ color: props.colorText, fontSize: 16, fontWeight: 'bold' }}>
+        <Text
+          style={{
+            color: props.colorText,
+            fontSize: 16,
+            fontWeight: 'bold',
+            textAlignVertical: 'center',
+          }}
+        >
           {props.title}
         </Text>
       </View>
