@@ -2,25 +2,29 @@ import { StyleSheet } from 'react-native';
 
 import { View } from '@/components/Themed';
 import { RichView } from '@/components/RichView';
+import { FAB } from '@/components/FAB';
 import { DateScroller } from '@/components/DateScroller';
 import { Calendar } from '@/components/Calendar';
 
 export default function TabOneScreen() {
   return (
-    <RichView
-      primaryChildren={
-        <View style={{ backgroundColor: 'transparent' }}>
-          <DateScroller />
-        </View>
-      }
-      secondaryChildren={
-        <View style={styles.container}>
-          <View style={styles.calendar}>
-            <Calendar />
+    <>
+      <RichView
+        primaryChildren={
+          <View style={{ backgroundColor: 'transparent' }}>
+            <DateScroller />
           </View>
-        </View>
-      }
-    ></RichView>
+        }
+        secondaryChildren={
+          <View style={styles.container}>
+            <View style={styles.calendar}>
+              <Calendar />
+            </View>
+          </View>
+        }
+      ></RichView>
+      <FAB onPress={() => {}} />
+    </>
   );
 }
 
