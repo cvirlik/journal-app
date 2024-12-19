@@ -4,16 +4,13 @@ import { View } from './Themed';
 import { Task } from './Task';
 import { Hour } from './Hour';
 
+import { useMocapData } from '@/providers/MocapDataProviders';
+
 export function Calendar() {
+  const { data } = useMocapData();
+
   const hours = [
     6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5,
-  ];
-
-  const tasks = [
-    { hourStart: 8, minutesStart: 0, hourEnd: 9, minutesEnd: 0, title: 'Morning Run' },
-    { hourStart: 9, minutesStart: 0, hourEnd: 9, minutesEnd: 15, title: 'Self Care' },
-    { hourStart: 11, minutesStart: 10, hourEnd: 12, minutesEnd: 0, title: 'Team Meeting' },
-    { hourStart: 13, minutesStart: 30, hourEnd: 15, minutesEnd: 30, title: 'Lunch Break' },
   ];
 
   const getType = (hour: number): 'sunrise' | 'sun' | 'sunset' | 'moon' | null => {
@@ -29,16 +26,23 @@ export function Calendar() {
       {hours.map(hour => (
         <Hour key={hour} hour={hour} last={hour === 5} type={getType(hour)} />
       ))}
-      {tasks.map((task, index) => (
-        <Task
-          key={index}
-          title={task.title}
-          hourIndexStart={hours.indexOf(task.hourStart)}
-          minutesStart={task.minutesStart}
-          hourIndexEnd={hours.indexOf(task.hourEnd)}
-          minutesEnd={task.minutesEnd}
-        />
-      ))}
+      {data.tasks.map((task, index) => {
+        const hourStart = task.timeStart.getHours();
+        const minutesStart = task.timeStart.getMinutes();
+        const hourEnd = task.timeEnd.getHours();
+        const minutesEnd = task.timeEnd.getMinutes();
+
+        return (
+          <Task
+            key={index}
+            title={task.name}
+            hourIndexStart={hours.indexOf(hourStart)}
+            minutesStart={minutesStart}
+            hourIndexEnd={hours.indexOf(hourEnd)}
+            minutesEnd={minutesEnd}
+          />
+        );
+      })}
     </View>
   );
 }

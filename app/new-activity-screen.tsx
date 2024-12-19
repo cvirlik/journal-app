@@ -3,9 +3,11 @@ import { CheckBox } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Keyboard, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/providers/ThemeProvider';
+import { useMocapData } from '@/providers/MocapDataProviders';
 import { Text, View } from '@/components/Themed';
 import TemplateList from '@/components/TemplateList';
 import { RichTextInput } from '@/components/RichTextInput';
@@ -14,6 +16,7 @@ import { Logo } from '@/components/Logo';
 
 export default function NewActivityScreen() {
   const theme = useTheme().theme;
+  const { addItem } = useMocapData();
   const [modalVisible, setModalVisible] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -106,21 +109,30 @@ export default function NewActivityScreen() {
                 placeholder="Popis aktivity"
                 multiline
               />
-              <RichTextInput
-                textInputProps={{
-                  placeholder: 'Datum',
-                  value: date ? date.toLocaleDateString() : '',
-                }}
-                value={date?.toLocaleDateString() || ''}
-                setValue={setDate}
-                onPress={event => {
-                  event.preventDefault();
-                  Keyboard.dismiss();
-                  setDatePickerVisible(true);
-                }}
-                onIconPress={() => setDatePickerVisible(true)}
-                icon={<Ionicons name="calendar" size={20} color={theme.colors.backgroundScroll} />}
-              />
+              <View>
+                <RichTextInput
+                  textInputProps={{
+                    placeholder: 'Datum',
+                    value: date ? date.toLocaleDateString() : '',
+                  }}
+                  value={date?.toLocaleDateString() || ''}
+                  setValue={setDate}
+                  onPress={event => {
+                    event.preventDefault();
+                    Keyboard.dismiss();
+                    setDatePickerVisible(true);
+                  }}
+                  onIconPress={() => setDatePickerVisible(true)}
+                  icon={
+                    <Ionicons name="calendar" size={20} color={theme.colors.backgroundScroll} />
+                  }
+                />
+                {name.trim() === '' && (
+                  <Text style={{ color: theme.colors.tintError, fontSize: 12 }}>
+                    Toto pole je povinné!
+                  </Text>
+                )}
+              </View>
               <DateTimePicker
                 isVisible={isDatePickerVisible}
                 mode="date"
@@ -129,35 +141,46 @@ export default function NewActivityScreen() {
                 onCancel={() => setDatePickerVisible(false)}
               />
               <View style={{ flexDirection: 'row', width: '100%', gap: 8 }}>
-                <RichTextInput
-                  textInputProps={{
-                    placeholder: 'Čas začátku',
-                    value: startTime
-                      ? startTime.toLocaleTimeString('cs-CZ', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : '',
-                  }}
-                  value={
-                    startTime
-                      ? startTime.toLocaleTimeString('cs-CZ', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : ''
-                  }
-                  setValue={setStartTime}
-                  onPress={event => {
-                    event.preventDefault();
-                    Keyboard.dismiss();
-                    setStartTimePickerVisible(true);
-                  }}
-                  onIconPress={() => setStartTimePickerVisible(true)}
-                  icon={
-                    <Ionicons name="time-outline" size={22} color={theme.colors.backgroundScroll} />
-                  }
-                />
+                <View style={{ flex: 1 }}>
+                  <RichTextInput
+                    textInputProps={{
+                      placeholder: 'Čas začátku',
+                      value: startTime
+                        ? startTime.toLocaleTimeString('cs-CZ', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : '',
+                    }}
+                    value={
+                      startTime
+                        ? startTime.toLocaleTimeString('cs-CZ', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : ''
+                    }
+                    setValue={setStartTime}
+                    onPress={event => {
+                      event.preventDefault();
+                      Keyboard.dismiss();
+                      setStartTimePickerVisible(true);
+                    }}
+                    onIconPress={() => setStartTimePickerVisible(true)}
+                    icon={
+                      <Ionicons
+                        name="time-outline"
+                        size={22}
+                        color={theme.colors.backgroundScroll}
+                      />
+                    }
+                  />
+                  {name.trim() === '' && (
+                    <Text style={{ color: theme.colors.tintError, fontSize: 12 }}>
+                      Toto pole je povinné!
+                    </Text>
+                  )}
+                </View>
                 {isStartTimePickerVisible && (
                   <DateTimePicker
                     isVisible={isStartTimePickerVisible}
@@ -166,29 +189,46 @@ export default function NewActivityScreen() {
                     onCancel={() => setStartTimePickerVisible(false)}
                   />
                 )}
-                <RichTextInput
-                  textInputProps={{
-                    placeholder: 'Čas konce',
-                    value: endTime
-                      ? endTime.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
-                      : '',
-                  }}
-                  value={
-                    endTime
-                      ? endTime.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
-                      : ''
-                  }
-                  setValue={setEndTime}
-                  onPress={event => {
-                    event.preventDefault();
-                    Keyboard.dismiss();
-                    setEndTimePickerVisible(true);
-                  }}
-                  onIconPress={() => setEndTimePickerVisible(true)}
-                  icon={
-                    <Ionicons name="time-outline" size={22} color={theme.colors.backgroundScroll} />
-                  }
-                />
+                <View style={{ flex: 1 }}>
+                  <RichTextInput
+                    textInputProps={{
+                      placeholder: 'Čas konce',
+                      value: endTime
+                        ? endTime.toLocaleTimeString('cs-CZ', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : '',
+                    }}
+                    value={
+                      endTime
+                        ? endTime.toLocaleTimeString('cs-CZ', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : ''
+                    }
+                    setValue={setEndTime}
+                    onPress={event => {
+                      event.preventDefault();
+                      Keyboard.dismiss();
+                      setEndTimePickerVisible(true);
+                    }}
+                    onIconPress={() => setEndTimePickerVisible(true)}
+                    icon={
+                      <Ionicons
+                        name="time-outline"
+                        size={22}
+                        color={theme.colors.backgroundScroll}
+                      />
+                    }
+                  />
+                  {name.trim() === '' && (
+                    <Text style={{ color: theme.colors.tintError, fontSize: 12 }}>
+                      Toto pole je povinné!
+                    </Text>
+                  )}
+                </View>
                 <DateTimePicker
                   isVisible={isEndTimePickerVisible}
                   mode="time"
@@ -303,14 +343,32 @@ export default function NewActivityScreen() {
                   icon={
                     <Ionicons name="arrow-forward" size={24} color={theme.colors.tintDefault} />
                   }
-                  onPress={() => {}}
+                  onPress={() => {
+                    router.push('/');
+
+                    addItem('tasks', {
+                      name,
+                      description,
+                      timeStart: startTime!,
+                      timeEnd: endTime!,
+                      date: date!,
+                      completed: false,
+                    });
+                    if (isTemplate) {
+                      addItem('templates', { name, description, repeat: value ?? undefined });
+                    }
+                  }}
                   color={
-                    name.trim() === '' ? theme.colors.backgroundScroll : theme.colors.tintPrimary
+                    name.trim() === '' || startTime === null || endTime === null || date === null
+                      ? theme.colors.backgroundScroll
+                      : theme.colors.tintPrimary
                   }
                   colorText={theme.colors.tintDefault}
                   filled
                   link=""
-                  disabled={name.trim() === ''}
+                  disabled={
+                    name.trim() === '' || startTime === null || endTime === null || date === null
+                  }
                   reverse
                 />
               </View>

@@ -58,7 +58,7 @@ export default function TemplateList(props: TemplateListProps) {
             >
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
               <Text>{item.description}</Text>
-              <Text>Repeat: {item.repeat}</Text>
+              <Text>Repeat: {item.repeat ?? 'never'}</Text>
             </TouchableOpacity>
             {index !== templates.length - 1 && <Separator />}
           </View>

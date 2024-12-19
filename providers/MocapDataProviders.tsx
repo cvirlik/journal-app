@@ -56,6 +56,8 @@ const MocapDataContext = React.createContext<{
 });
 
 export function MocapDataProvider(props: React.PropsWithChildren) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const [data, setData] = useState<MocapData>({
     contacts: [
       {
@@ -106,7 +108,40 @@ export function MocapDataProvider(props: React.PropsWithChildren) {
       { name: 'Reading', description: 'Read a book', repeat: 'week' },
       { name: 'Gardening', description: 'Take care of the garden', repeat: 'month' },
     ],
-    tasks: [], // Replace with your default values
+    tasks: [
+      {
+        name: 'Morning Run',
+        description: 'Go for a run in the morning',
+        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 8, 0),
+        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 0),
+        date: today,
+        completed: false,
+      },
+      {
+        name: 'Self Care',
+        description: 'Spend some time on self-care',
+        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 0),
+        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 15),
+        date: today,
+        completed: false,
+      },
+      {
+        name: 'Team Meeting',
+        description: 'Attend the team meeting',
+        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 10),
+        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0),
+        date: today,
+        completed: false,
+      },
+      {
+        name: 'Lunch Break',
+        description: 'Take a break for lunch',
+        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 13, 30),
+        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 30),
+        date: today,
+        completed: false,
+      },
+    ],
     actions: [
       {
         whos: 'John Doe',
