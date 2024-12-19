@@ -1,5 +1,4 @@
 import Svg, { Circle } from 'react-native-svg';
-import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
@@ -27,8 +26,8 @@ export default function CallScreen() {
   const seconds = time % 60;
 
   return (
-    <Animated.View
-      entering={FadeIn.duration(300).easing(Easing.inOut(Easing.quad))}
+    <View
+      //   entering={FadeIn.duration(300).easing(Easing.inOut(Easing.quad))}
       style={{
         flex: 1,
         justifyContent: 'center',
@@ -90,7 +89,7 @@ export default function CallScreen() {
           <Feather name="phone-off" size={24} color="black" />
         </TouchableOpacity>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 

@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { SelectedUserProvider } from '@/providers/SelectedUserProvider';
+import { MocapDataProvider } from '@/providers/MocapDataProviders';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,21 +48,22 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <ThemeProvider>
-      <SelectedUserProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="call-modal" options={{ presentation: 'modal', headerShown: false }} />
-          <Stack.Screen
-            name="call-screen"
-            options={{ presentation: 'modal', headerShown: false }}
-          />
-          <Stack.Screen
-            name="confirmation-modal"
-            options={{ presentation: 'modal', headerShown: false }}
-          />
-        </Stack>
-      </SelectedUserProvider>
-    </ThemeProvider>
+    <MocapDataProvider>
+      <ThemeProvider>
+        <SelectedUserProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="new-activity-screen"
+              options={{ presentation: 'transparentModal', headerShown: false }}
+            />
+            <Stack.Screen
+              name="call-screen"
+              options={{ presentation: 'modal', headerShown: false }}
+            />
+          </Stack>
+        </SelectedUserProvider>
+      </ThemeProvider>
+    </MocapDataProvider>
   );
 }
