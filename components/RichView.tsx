@@ -34,7 +34,7 @@ export function RichView(props: RichViewProps) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 16,
+    paddingTop: 18,
     flex: 1,
   },
   wrapper: {

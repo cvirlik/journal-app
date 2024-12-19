@@ -13,9 +13,10 @@ export function FAB(props: FABProps) {
   const theme = useTheme().theme;
   return (
     <View style={{ position: 'relative' }}>
-      <Pressable style={styles.button} onPress={props.onPress}>
+      <Pressable style={styles.button}>
         {() => (
           <TouchableOpacity
+            onPress={props.onPress}
             style={{
               alignItems: 'center',
               justifyContent: 'center',
@@ -26,7 +27,7 @@ export function FAB(props: FABProps) {
               elevation: 10,
             }}
           >
-            <Ionicons name="add" size={48} color="white" />
+            <Ionicons name="add" size={48} color={theme.colors.tabIconSelected} />
           </TouchableOpacity>
         )}
       </Pressable>

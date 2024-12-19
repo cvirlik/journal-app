@@ -15,15 +15,7 @@ import { RichButton } from './RichButton';
 
 import { useTheme } from '@/providers/ThemeProvider';
 import { useSelectedUser } from '@/providers/SelectedUserProvider';
-
-export type PersonProps = {
-  name: string;
-  lastActivityTime: string;
-  lastActivityLog: string;
-  location: string | undefined;
-  battery: number;
-  active: boolean;
-};
+import type { Actions } from '@/providers/MocapDataProviders';
 
 function getTimeDifferenceInHours(targetDate: string) {
   const now = new Date(); // Current date and time
@@ -35,8 +27,14 @@ function getTimeDifferenceInHours(targetDate: string) {
   return differenceInHours.toFixed(0);
 }
 
-export const PersonCard = React.memo(function PersonCard(props: PersonProps) {
+type PersonCardProps = Actions & {
+  setModalOKVisible: (value: boolean) => void;
+  setModalCallVisible: (value: boolean) => void;
+};
+
+export const PersonCard = React.memo(function PersonCard(props: PersonCardProps) {
   const theme = useTheme().theme;
+
   const set = useSelectedUser().set;
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -108,20 +106,20 @@ export const PersonCard = React.memo(function PersonCard(props: PersonProps) {
     >
       <View
         style={{
-          backgroundColor: props.active ? theme.colors.tintSecondary : theme.colors.tintOK,
+          backgroundColor: props.pending ? theme.colors.tintSecondary : theme.colors.tintOK,
           padding: 8,
           flexDirection: 'row',
           gap: 8,
         }}
       >
         <Ionicons
-          name={props.active ? 'warning' : 'happy-outline'}
+          name={props.pending ? 'warning' : 'happy-outline'}
           size={24}
           color={theme.colors.secondaryText}
         />
         <Text style={[styles.time, { color: theme.colors.secondaryText }]}>
-          {props.active
-            ? `Naposledy reagoval/a před ${getTimeDifferenceInHours(props.lastActivityTime)} hod.`
+          {props.pending
+            ? `Naposledy reagoval/a před ${getTimeDifferenceInHours(props.time)} hod.`
             : 'Vyřešeno včera'}
         </Text>
       </View>
@@ -131,8 +129,13 @@ export const PersonCard = React.memo(function PersonCard(props: PersonProps) {
             <Circle cx="46" cy="46" r="46" fill="pink" />
           </Svg>
           <View style={{ flexDirection: 'column', width: '60%' }}>
-            <Text style={styles.name}>{props.name}</Text>
-            <Text style={styles.log}>{props.lastActivityLog}</Text>
+            <Text style={styles.name}>{props.whos}</Text>
+            <Text style={styles.log}>{props.pending ? props.lastAction : props.note}</Text>
+            {!props.pending && (
+              <Text style={[styles.log, { fontStyle: 'italic', fontSize: 14 }]}>
+                {`vyřešil(a) ${props.whoSolve}`}
+              </Text>
+            )}
           </View>
         </View>
         {/* Toggleable Additional Info */}
@@ -193,6 +196,7 @@ export const PersonCard = React.memo(function PersonCard(props: PersonProps) {
                       paddingHorizontal: 4,
                       paddingVertical: 2,
                       justifyContent: 'center',
+                      width: 48,
                     }}
                   >
                     <Text style={{ fontWeight: 'bold', color: 'white' }}>2 krát</Text>
@@ -204,7 +208,7 @@ export const PersonCard = React.memo(function PersonCard(props: PersonProps) {
           </View>
         </Animated.View>
         {/* Toggle Button */}
-        {props.active && (
+        {props.pending && (
           <>
             <TouchableOpacity
               onPress={toggleExpand}
@@ -243,9 +247,9 @@ export const PersonCard = React.memo(function PersonCard(props: PersonProps) {
                 colorText={theme.colors.tintPrimary}
                 color={theme.colors.tintPrimary}
                 filled={false}
-                link="call-modal"
                 onPress={() => {
-                  set({ name: props.name });
+                  set({ name: props.whos });
+                  props.setModalCallVisible(true);
                 }}
               />
               <RichButton
@@ -254,10 +258,9 @@ export const PersonCard = React.memo(function PersonCard(props: PersonProps) {
                 colorText={theme.colors.tintDefault}
                 color={theme.colors.tintPrimary}
                 filled
-                link="confirmation-modal"
                 onPress={() => {
-                  console.log('Button pressed:', props.name);
-                  set({ name: props.name });
+                  set({ name: props.whos });
+                  props.setModalOKVisible(true);
                 }}
               />
             </TouchableOpacity>

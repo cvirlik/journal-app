@@ -1,5 +1,6 @@
-import { StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
+import type { Href } from 'expo-router';
 
 import { Text, View } from './Themed';
 
@@ -9,14 +10,16 @@ type RichButtonProps = {
   color: string;
   colorText: string;
   filled: boolean;
-  link: string;
-  onPress?: () => void;
+  link?: string;
+  reverse?: boolean;
+  onPress?: (...args: any[]) => void;
+  disabled?: boolean;
 };
 
 export function RichButton(props: RichButtonProps) {
   return (
-    <Link
-      href={`/${props.link}`}
+    <TouchableOpacity
+      disabled={props.disabled ?? false}
       style={[
         styles.button,
         {
@@ -29,12 +32,14 @@ export function RichButton(props: RichButtonProps) {
         },
       ]}
       onPress={() => {
-        if (props.onPress) props.onPress();
+        if (props.link) {
+          router.push(props.link as Href);
+        } else if (props.onPress) props.onPress();
       }}
     >
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: props.reverse ? 'row-reverse' : 'row',
           alignItems: 'center',
           gap: 8,
           justifyContent: 'center',
@@ -53,7 +58,7 @@ export function RichButton(props: RichButtonProps) {
           {props.title}
         </Text>
       </View>
-    </Link>
+    </TouchableOpacity>
   );
 }
 

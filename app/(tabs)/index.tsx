@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 
 import { View } from '@/components/Themed';
 import { RichView } from '@/components/RichView';
@@ -23,7 +24,7 @@ export default function TabOneScreen() {
           </View>
         }
       ></RichView>
-      <FAB onPress={() => {}} />
+      <FAB onPress={() => router.push('/new-activity-screen')} />
     </>
   );
 }

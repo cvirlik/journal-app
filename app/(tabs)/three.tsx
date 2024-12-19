@@ -1,101 +1,89 @@
 import Svg, { Circle } from 'react-native-svg';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
+import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
+import AddContactsModal from '../add-contact-modal';
+
 import { useTheme } from '@/providers/ThemeProvider';
+import { useMocapData, User } from '@/providers/MocapDataProviders';
 import { Text, View } from '@/components/Themed';
+import { Separator } from '@/components/Separator';
 import { RichView } from '@/components/RichView';
 
 export default function TabTwoScreen() {
   const theme = useTheme().theme;
+  const { data, addItem, deleteItem } = useMocapData();
 
-  const mokapData = [
-    {
-      color: 'red',
-      name: 'John Doe',
-    },
-    {
-      name: 'Jane Smith',
-      color: 'blue',
-    },
-    {
-      name: 'Mark Johnson',
-      color: 'magenta',
-    },
-    {
-      name: 'Alice Brown',
-      color: 'brown',
-    },
-    {
-      name: 'Jane Smith',
-      color: 'blue',
-    },
-    {
-      name: 'Mark Johnson',
-      color: 'magenta',
-    },
-    {
-      name: 'Alice Brown',
-      color: 'brown',
-    },
-  ];
+  const [modalContactsVisible, setModalContactsVisible] = useState(false);
   return (
-    <RichView
-      primaryChildren={
-        <View style={{ backgroundColor: 'transparent' }}>
-          <Text style={styles.label}>Kontakty</Text>
-        </View>
-      }
-      secondaryChildren={
-        <View style={styles.circleContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 8,
-            }}
-          >
+    <>
+      <RichView
+        primaryChildren={
+          <View style={{ backgroundColor: 'transparent' }}>
+            <Text style={styles.label}>Kontakty</Text>
+          </View>
+        }
+        secondaryChildren={
+          <View style={styles.circleContainer}>
             <View
               style={{
                 flexDirection: 'row',
-                gap: 8,
-                backgroundColor: theme.colors.background,
-                padding: 8,
-                borderRadius: 16,
-                width: '85%',
+                width: '100%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 8,
               }}
             >
-              <Ionicons name="search" size={20} color="black" />
-              <Text style={styles.text}>Search</Text>
-            </View>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: theme.colors.tintOK }]}
-              onPress={() => router.push('/two')}
-            >
-              <Ionicons name="add" size={20} color="black" />
-            </TouchableOpacity>
-          </View>
-          {mokapData.map((item, index) => (
-            <View key={index} style={{ alignItems: 'center', gap: 4 }}>
-              <View style={styles.circleWrapper}>
-                <Svg height="64" width="64">
-                  <Circle cx="32" cy="32" r="32" fill={item.color} />
-                </Svg>
-                <Text style={styles.circleLabel}>{item.name}</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 8,
+                  backgroundColor: theme.colors.background,
+                  padding: 8,
+                  borderRadius: 16,
+                  width: '85%',
+                }}
+              >
+                <Ionicons name="search" size={20} color="black" />
+                <Text style={styles.text}>Search</Text>
               </View>
-              {index < mokapData.length - 1 && (
-                <View
-                  style={{ height: 1, width: '80%', backgroundColor: theme.colors.secondaryText }}
-                />
-              )}
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: theme.colors.tintOK }]}
+                onPress={() => setModalContactsVisible(true)}
+              >
+                <Ionicons name="add" size={20} color="black" />
+              </TouchableOpacity>
             </View>
-          ))}
-        </View>
-      }
-    />
+            {data.contacts.map((item, index) => (
+              <View key={index} style={{ alignItems: 'center', gap: 4 }}>
+                <View style={styles.circleWrapper}>
+                  <Svg height="64" width="64">
+                    <Circle cx="32" cy="32" r="32" fill={item.avatarColor} />
+                  </Svg>
+                  <Text style={styles.circleLabel}>{item.name}</Text>
+                </View>
+                {index < data.contacts.length - 1 && <Separator />}
+              </View>
+            ))}
+          </View>
+        }
+      />
+      {modalContactsVisible && (
+        <AddContactsModal
+          onConfirm={(user: User) => {
+            setModalContactsVisible(false);
+
+            addItem('contacts', user);
+            const index = data.avalibleContacts.findIndex(contact => contact.name === user.name);
+            if (index !== -1) {
+              deleteItem('avalibleContacts', index);
+            }
+          }}
+          onClose={setModalContactsVisible}
+        />
+      )}
+    </>
   );
 }
 
@@ -107,7 +95,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignContent: 'center',
   },
-  container: {},
   circleContainer: {
     flexDirection: 'column',
     justifyContent: 'center',

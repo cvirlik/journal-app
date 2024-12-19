@@ -81,6 +81,7 @@ export const TabBar = ({ descriptors, navigation }: BottomTabBarProps) => {
         borderTopRightRadius: 16,
         backgroundColor: '#ffffff',
         position: 'absolute',
+        zIndex: 0,
         bottom: 0,
         left: 0,
         width: '100%',
