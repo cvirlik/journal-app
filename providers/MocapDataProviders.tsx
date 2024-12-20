@@ -1,3 +1,4 @@
+import type { ImageRequireSource } from 'react-native';
 import React, { useState } from 'react';
 
 export type User = {
@@ -31,12 +32,17 @@ export type Actions = {
   note: string | null;
 };
 
+type Photos = {
+  image: ImageRequireSource;
+};
+
 type MocapData = {
   contacts: User[];
   avalibleContacts: User[];
   templates: Templates[];
   tasks: Tasks[];
   actions: Actions[];
+  photos: Photos[];
 };
 
 const MocapDataContext = React.createContext<{
@@ -49,7 +55,7 @@ const MocapDataContext = React.createContext<{
   ) => void;
   deleteItem: <T extends keyof MocapData>(key: T, index: number) => void;
 }>({
-  data: { contacts: [], avalibleContacts: [], templates: [], tasks: [], actions: [] },
+  data: { contacts: [], avalibleContacts: [], templates: [], tasks: [], actions: [], photos: [] },
   addItem: () => {},
   editItem: () => {},
   deleteItem: () => {},
@@ -62,80 +68,80 @@ export function MocapDataProvider(props: React.PropsWithChildren) {
     contacts: [
       {
         avatarColor: '#FC6471',
-        name: 'John Doe',
+        name: 'Jan Novák',
       },
       {
-        name: 'Jane Smith',
+        name: 'Petr Svoboda',
         avatarColor: '#464AB7',
       },
       {
-        name: 'Mark Johnson',
+        name: 'Martin Dvořák',
         avatarColor: '#A1A3F6',
       },
       {
-        name: 'Alice Brown',
+        name: 'Tomáš Král',
         avatarColor: '#FFE156',
       },
       {
-        name: 'Kate Smith',
+        name: 'Jakub Procházka',
         avatarColor: '#DBF4A7',
       },
       {
-        name: 'Alex Johnson',
+        name: 'Lukáš Veselý',
         avatarColor: '#FC6471',
       },
       {
-        name: 'Alice Stone',
+        name: 'Ondřej Černý',
         avatarColor: '#464AB7',
       },
     ],
     avalibleContacts: [
       {
-        name: 'Mom',
+        name: 'Máma',
         avatarColor: '#A1A3F6',
       },
       {
-        name: 'Grandad',
+        name: 'Táta',
         avatarColor: '#FFE156',
       },
     ],
     templates: [
-      { name: 'Cleaning', description: 'Clean your house', repeat: 'day' },
-      { name: 'Cooking', description: 'Cook your meals', repeat: 'day' },
-      { name: 'Doctor', description: 'Prepare your medication', repeat: 'month' },
-      { name: 'Cat', description: 'Feed your cat', repeat: 'week' },
-      { name: 'Exercise', description: 'Daily exercise routine', repeat: 'day' },
-      { name: 'Reading', description: 'Read a book', repeat: 'week' },
-      { name: 'Gardening', description: 'Take care of the garden', repeat: 'month' },
+      { name: 'Úklid', description: 'Ukliďte svůj dům', repeat: 'day' },
+      { name: 'Vaření', description: 'Uvařte si jídlo', repeat: 'day' },
+      { name: 'Doktor', description: 'Připravte si léky', repeat: 'month' },
+      { name: 'Kočka', description: 'Nakrmte svou kočku', repeat: 'week' },
+      { name: 'Cvičení', description: 'Denní cvičební rutina', repeat: 'day' },
+      { name: 'Čtení', description: 'Přečtěte si knihu', repeat: 'week' },
+      { name: 'Zahradničení', description: 'Postarejte se o zahradu', repeat: 'month' },
     ],
     tasks: [
       {
-        name: 'Morning Run',
-        description: 'Go for a run in the morning',
+        name: 'Ranní běh',
+        description: 'Jděte si zaběhat ráno',
         timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 8, 0),
         timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 0),
         date: today,
         completed: false,
       },
       {
-        name: 'Self Care',
-        description: 'Spend some time on self-care',
+        name: 'Péče o sebe',
+        description: 'Věnujte čas péči o sebe',
         timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 0),
         timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 15),
         date: today,
         completed: false,
       },
       {
-        name: 'Team Meeting',
-        description: 'Attend the team meeting',
+        name: 'Týmová schůzka',
+        description: 'Zúčastněte se týmové schůzky',
         timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 10),
         timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0),
         date: today,
         completed: false,
       },
       {
-        name: 'Lunch Break',
-        description: 'Take a break for lunch',
+        name: 'Přestávka na oběd',
+        description: 'Dejte si přestávku na oběd',
         timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 13, 30),
         timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 30),
         date: today,
@@ -144,44 +150,73 @@ export function MocapDataProvider(props: React.PropsWithChildren) {
     ],
     actions: [
       {
-        whos: 'John Doe',
+        whos: 'Jan Novák',
         time: '2024-12-05T08:00:00',
-        lastAction: 'Living life',
-        location: 'New York',
+        lastAction: 'Žíl život',
+        location: 'Praha',
         battery: 12,
         pending: true,
         whoSolve: null,
         note: null,
       },
       {
-        whos: 'Jane Smith',
+        whos: 'Petr Svoboda',
         time: '2024-12-04T18:00:00',
-        lastAction: 'Cleaning',
-        location: undefined,
+        lastAction: 'Úklid',
+        location: 'Brno',
         battery: 62,
         pending: false,
-        whoSolve: 'Mark Johnson',
+        whoSolve: 'Martin Dvořák',
         note: null,
       },
       {
-        whos: 'Mark Johnson',
+        whos: 'Martin Dvořák',
         time: '2024-12-05T09:00:00',
-        lastAction: 'Sleeping',
-        location: 'California',
+        lastAction: 'Spánek',
+        location: 'Ostrava',
         battery: 95,
         pending: true,
         whoSolve: null,
         note: null,
       },
       {
-        whos: 'Alice Brown',
+        whos: 'Tomáš Král',
         time: '2024-12-03T20:00:00',
         lastAction: 'Oaoaoao',
-        location: 'London',
+        location: 'Plzeň',
         battery: 45,
         pending: false,
-        whoSolve: 'Mark Johnson',
-        note: 'She was asleep',
+        whoSolve: 'Martin Dvořák',
+        note: 'Spal',
+      },
+    ],
+    photos: [
+      {
+        image: require('../assets/images/photos/0.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/1.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/2.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/3.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/4.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/5.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/6.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/7.jpg'),
+      },
+      {
+        image: require('../assets/images/photos/8.jpg'),
       },
     ],
   });
