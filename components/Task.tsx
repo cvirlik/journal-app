@@ -1,5 +1,5 @@
 import { CheckBox } from 'react-native-elements';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { useState } from 'react';
 
 import { View } from './Themed';
@@ -35,26 +35,32 @@ export function Task({ title, hourIndexStart, minutesStart, hourIndexEnd, minute
           height,
           borderColor: theme.colors.backgroundScroll,
           borderWidth: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
         },
       ]}
     >
-      <View style={{ alignSelf: 'center', flex: 1 }}>
-        <Text style={styles.taskTitle}>{title}</Text>
-      </View>
-      <CheckBox
-        checkedColor={theme.colors.tintPrimary}
-        containerStyle={styles.checkboxContainer}
-        wrapperStyle={styles.checkboxWrapper}
-        checked={done}
-        onPressIn={() => {
-          const index = data.tasks.findIndex(item => item.name === title);
-          editItem('tasks', index, { ...data.tasks[index], completed: !done });
-          setDone(c => !c);
+      <View
+        style={{
+          paddingVertical: 8,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
-      />
+      >
+        <View style={{ alignSelf: 'center', flex: 1 }}>
+          <Text style={styles.taskTitle}>{title}</Text>
+        </View>
+        <CheckBox
+          checkedColor={theme.colors.tintPrimary}
+          containerStyle={styles.checkboxContainer}
+          wrapperStyle={styles.checkboxWrapper}
+          checked={done}
+          onPressIn={() => {
+            const index = data.tasks.findIndex(item => item.name === title);
+            editItem('tasks', index, { ...data.tasks[index], completed: !done });
+            setDone(c => !c);
+          }}
+        />
+      </View>
     </View>
   );
 }

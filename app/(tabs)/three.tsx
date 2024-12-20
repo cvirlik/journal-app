@@ -1,21 +1,29 @@
 import Svg, { Circle } from 'react-native-svg';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
 import AddContactsModal from '../add-contact-modal';
 
 import { useTheme } from '@/providers/ThemeProvider';
-import { useMocapData, User } from '@/providers/MocapDataProviders';
+import { useMocapData } from '@/providers/MocapDataProviders';
+import type { User } from '@/providers/MocapDataProviders';
 import { Text, View } from '@/components/Themed';
 import { Separator } from '@/components/Separator';
+import { SearchBar } from '@/components/SearchBar';
 import { RichView } from '@/components/RichView';
 
-export default function TabTwoScreen() {
+export default function TabThreeScreen() {
   const theme = useTheme().theme;
   const { data, addItem, deleteItem } = useMocapData();
 
   const [modalContactsVisible, setModalContactsVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredContacts = data.contacts.filter(contact =>
+    contact.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   return (
     <>
       <RichView
@@ -35,37 +43,32 @@ export default function TabTwoScreen() {
                 marginBottom: 8,
               }}
             >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  gap: 8,
-                  backgroundColor: theme.colors.background,
-                  padding: 8,
-                  borderRadius: 16,
-                  width: '85%',
-                }}
-              >
-                <Ionicons name="search" size={20} color="black" />
-                <Text style={styles.text}>Search</Text>
-              </View>
+              <SearchBar onSearch={setSearchQuery} />
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: theme.colors.tintOK }]}
-                onPress={() => setModalContactsVisible(true)}
+                onPressIn={() => setModalContactsVisible(true)}
               >
                 <Ionicons name="add" size={20} color="black" />
               </TouchableOpacity>
             </View>
-            {data.contacts.map((item, index) => (
-              <View key={index} style={{ alignItems: 'center', gap: 4 }}>
-                <View style={styles.circleWrapper}>
-                  <Svg height="64" width="64">
-                    <Circle cx="32" cy="32" r="32" fill={item.avatarColor} />
-                  </Svg>
-                  <Text style={styles.circleLabel}>{item.name}</Text>
+
+            {filteredContacts.length === 0 ? (
+              <Text
+                style={[styles.noContactsText, { color: theme.colors.secondaryText }]}
+              >{`Žádný takový kontakt neexistuje :(`}</Text>
+            ) : (
+              filteredContacts.map((item, index) => (
+                <View key={index} style={{ alignItems: 'center', gap: 6 }}>
+                  <View style={styles.circleWrapper}>
+                    <Svg height="64" width="64">
+                      <Circle cx="32" cy="32" r="32" fill={item.avatarColor} />
+                    </Svg>
+                    <Text style={styles.circleLabel}>{item.name}</Text>
+                  </View>
+                  {index < filteredContacts.length - 1 && <Separator />}
                 </View>
-                {index < data.contacts.length - 1 && <Separator />}
-              </View>
-            ))}
+              ))
+            )}
           </View>
         }
       />
@@ -93,13 +96,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2c2c32ff',
     textAlign: 'center',
-    alignContent: 'center',
   },
   circleContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
-    gap: 4,
     padding: 16,
+    gap: 6,
   },
   circleWrapper: {
     width: '100%',
@@ -112,21 +114,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     color: '#2c2c32ff',
-    alignContent: 'center',
-    textAlignVertical: 'center',
     lineHeight: 20,
   },
-  text: {
-    fontSize: 18,
+  noContactsText: {
+    fontSize: 16,
     fontWeight: '400',
-    color: '#2c2c32ff',
-    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 16,
   },
   button: {
-    width: 36, // size of the button
-    height: 36, // size of the button
-    borderRadius: 30, // makes it round
-    justifyContent: 'center', // center icon horizontally
-    alignItems: 'center', // center icon vertically
+    width: 36,
+    height: 36,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
@@ -62,6 +63,7 @@ function RootLayoutNav() {
               options={{ presentation: 'modal', headerShown: false }}
             />
           </Stack>
+          <StatusBar style="dark" backgroundColor="transparent" />
         </SelectedUserProvider>
       </ThemeProvider>
     </MocapDataProvider>

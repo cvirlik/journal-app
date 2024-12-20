@@ -15,7 +15,7 @@ export function Modal(props: ModalProps) {
   const theme = useTheme().theme;
 
   return (
-    <RNModal visible transparent>
+    <RNModal visible transparent statusBarTranslucent>
       <Animated.View
         entering={FadeIn.duration(300).easing(Easing.inOut(Easing.quad))}
         exiting={FadeOut.duration(300).easing(Easing.inOut(Easing.quad))}
