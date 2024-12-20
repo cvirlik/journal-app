@@ -1,4 +1,3 @@
-import Svg, { Circle } from 'react-native-svg';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
@@ -6,14 +5,19 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/providers/ThemeProvider';
 import { useSelectedUser } from '@/providers/SelectedUserProvider';
+import { useMocapData } from '@/providers/MocapDataProviders';
 import { Text, View } from '@/components/Themed';
+import { Avatar } from '@/components/Avatar';
 
 export default function CallScreen() {
   const theme = useTheme().theme;
   const { profile } = useSelectedUser();
+  const { data } = useMocapData();
 
   const [time, setTime] = useState(0); // Time in seconds
+  const index = data.contacts.findIndex(contact => contact.name === profile?.name);
 
+  useEffect(() => {});
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prevTime: number) => prevTime + 1);
@@ -43,9 +47,7 @@ export default function CallScreen() {
             alignItems: 'center',
           }}
         >
-          <Svg height="100" width="100">
-            <Circle cx="48" cy="48" r="48" fill="pink" />
-          </Svg>
+          <Avatar size={100} cxyr={48} image={data.photos[index].image} />
           <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 32 }}>{profile?.name}</Text>
           <Text style={{ color: 'white', fontSize: 24 }}>volám</Text>
           <Text style={styles.timerText}>

@@ -14,8 +14,13 @@ import { PersonCard } from '@/components/PersonCard';
 export default function TabTwoScreen() {
   const { data, editItem } = useMocapData();
   const { profile } = useSelectedUser();
-  const sortedData = [...data.actions].sort((a, b) => (b.pending ? 1 : 0) - (a.pending ? 1 : 0));
-
+  const sortedData = [...data.actions].sort((a, b) => {
+    const pendingDifference = (b.pending ? 1 : 0) - (a.pending ? 1 : 0);
+    if (pendingDifference !== 0) return pendingDifference;
+    const dateA = a.solveOnDate ? new Date(a.solveOnDate).getTime() : new Date().getTime();
+    const dateB = b.solveOnDate ? new Date(b.solveOnDate).getTime() : new Date().getTime();
+    return dateB - dateA;
+  });
   const [modalCallVisible, setModalCallVisible] = useState(false);
   const [modalOKVisible, setModalOKVisible] = useState(false);
   return (
@@ -51,7 +56,8 @@ export default function TabTwoScreen() {
               editItem('actions', index, {
                 ...data.actions[index],
                 pending: false,
-                whoSolve: 'ja',
+                whoSolve: 'já',
+                solveOnDate: new Date(),
               });
             }
           }}

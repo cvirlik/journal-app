@@ -37,6 +37,7 @@ export const PersonCard = React.memo(function PersonCard(props: PersonCardProps)
   const { data } = useMocapData();
 
   const photoIndex = data.contacts.findIndex(contact => contact.name === props.whos);
+  const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
 
   const set = useSelectedUser().set;
 
@@ -123,7 +124,16 @@ export const PersonCard = React.memo(function PersonCard(props: PersonCardProps)
         <Text style={[styles.time, { color: theme.colors.secondaryText }]}>
           {props.pending
             ? `Naposledy reagoval/a před ${getTimeDifferenceInHours(props.time)} hod.`
-            : 'Vyřešeno včera'}
+            : `Vyřešeno ${
+                props.solveOnDate?.getDate() === yesterday.getDate()
+                  ? 'včera'
+                  : props.solveOnDate?.getDate() === new Date().getDate()
+                    ? 'dnes'
+                    : props.solveOnDate?.toLocaleDateString('cs-CZ', {
+                        day: '2-digit',
+                        month: 'long', // This will display the month as a word
+                      })
+              }`}
         </Text>
       </View>
       <View style={{ padding: 16, alignItems: 'center', gap: 8 }}>

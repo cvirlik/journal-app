@@ -16,7 +16,7 @@ import { RepeatSelector } from '@/components/RepeatSelector';
 import { DatePickerInput } from '@/components/DatePickerInput';
 
 export default function NewActivityScreen() {
-  const theme = useTheme().theme;
+  const { theme } = useTheme();
   const { addItem } = useMocapData();
   const [modalVisible, setModalVisible] = useState(false);
 

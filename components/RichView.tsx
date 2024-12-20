@@ -24,6 +24,7 @@ export function RichView({
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={[styles.wrapper, { backgroundColor: theme.colors.defaultBackground }]}>
+        <Logo />
         <View
           style={{
             backgroundColor: 'transparent',
@@ -31,10 +32,8 @@ export function RichView({
             alignItems: 'center',
             paddingHorizontal: 32,
             paddingVertical: 16,
-            position: 'relative',
           }}
         >
-          <Logo />
           <Text style={styles.label}>{title}</Text>
         </View>
         {withScrollContainer ? (
@@ -43,7 +42,6 @@ export function RichView({
               marginTop: 32,
               borderRadius: 16,
               backgroundColor: theme.colors.backgroundScroll,
-              //   elevation: 2,
             }}
           >
             <View style={{ gap: 8 }}>{children}</View>

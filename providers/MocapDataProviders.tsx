@@ -30,6 +30,7 @@ export type Actions = {
   pending: boolean;
   whoSolve: string | null;
   note: string | null;
+  solveOnDate: Date | null;
 };
 
 type Photos = {
@@ -151,13 +152,14 @@ export function MocapDataProvider(props: React.PropsWithChildren) {
     actions: [
       {
         whos: 'Jan Novák',
-        time: '2024-12-05T08:00:00',
+        time: new Date(new Date().getTime() - 5 * 60 * 60 * 1000).toISOString(),
         lastAction: 'Žíl život',
         location: 'Praha',
         battery: 12,
         pending: true,
         whoSolve: null,
         note: null,
+        solveOnDate: null,
       },
       {
         whos: 'Petr Svoboda',
@@ -168,16 +170,18 @@ export function MocapDataProvider(props: React.PropsWithChildren) {
         pending: false,
         whoSolve: 'Martin Dvořák',
         note: null,
+        solveOnDate: new Date(new Date().setDate(new Date().getDate() - 2)),
       },
       {
         whos: 'Martin Dvořák',
-        time: '2024-12-05T09:00:00',
+        time: new Date(new Date().getTime() - 2 * 60 * 60 * 1000).toISOString(),
         lastAction: 'Spánek',
         location: 'Ostrava',
         battery: 95,
         pending: true,
         whoSolve: null,
         note: null,
+        solveOnDate: null,
       },
       {
         whos: 'Tomáš Král',
@@ -188,6 +192,7 @@ export function MocapDataProvider(props: React.PropsWithChildren) {
         pending: false,
         whoSolve: 'Martin Dvořák',
         note: 'Spal',
+        solveOnDate: new Date(new Date().setDate(new Date().getDate() - 1)),
       },
     ],
     photos: [
