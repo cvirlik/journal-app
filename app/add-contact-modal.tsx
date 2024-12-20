@@ -1,4 +1,3 @@
-import Svg, { Circle } from 'react-native-svg';
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -7,6 +6,7 @@ import { useMocapData } from '@/providers/MocapDataProviders';
 import { View } from '@/components/Themed';
 import { Separator } from '@/components/Separator';
 import { Modal } from '@/components/Modal';
+import { Avatar } from '@/components/Avatar';
 
 type AddContactsModalProps = {
   onClose: (close: boolean) => void;
@@ -15,7 +15,8 @@ type AddContactsModalProps = {
 
 export default function AddContactsModal(props: AddContactsModalProps) {
   const theme = useTheme().theme;
-  const contacts = useMocapData().data.avalibleContacts;
+  const { data } = useMocapData();
+  const contacts = data.avalibleContacts;
   return (
     <Modal onClose={props.onClose}>
       <TouchableOpacity
@@ -36,20 +37,18 @@ export default function AddContactsModal(props: AddContactsModalProps) {
           textAlign: 'center',
         }}
       >
-        Avalible Contacts
+        Dostupné kontakty
       </Text>
       <ScrollView contentContainerStyle={{ gap: 8 }}>
         {contacts.length === 0 && (
           <Text style={{ textAlign: 'center', fontSize: 16 }}>
-            You currenly has no contacts avalible!
+            Momentálně nemáte žádné dostupné kontakty!
           </Text>
         )}
         {contacts.map((item, index) => (
           <View key={index} style={{ alignItems: 'center', gap: 4 }}>
             <TouchableOpacity style={styles.circleWrapper} onPress={() => props.onConfirm(item)}>
-              <Svg height="64" width="64">
-                <Circle cx="32" cy="32" r="32" fill={item.avatarColor} />
-              </Svg>
+              <Avatar size={64} cxyr={32} image={data.photos[index + data.contacts.length].image} />
               <Text style={styles.circleLabel}>{item.name}</Text>
             </TouchableOpacity>
             {index < contacts.length - 1 && <Separator />}

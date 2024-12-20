@@ -6,7 +6,7 @@ import { View } from './Themed';
 export function Logo() {
   return (
     <View style={styles.logo}>
-      <Svg width="24" height="24" viewBox="0 0 23 23" fill="none">
+      <Svg width="32" height="32" viewBox="0 0 23 23" fill="none">
         <Path
           fill-rule="evenodd"
           clip-rule="evenodd"
@@ -22,7 +22,7 @@ export function Logo() {
         />
         <Path
           d="M11.5 20.7C15.5062 20.7 18.7538 17.5315 18.7538 13.623H4.24615C4.24615 17.5315 7.49381 20.7 11.5 20.7Z"
-          fill="#58C6CD"
+          fill="#DBF4A7"
         />
       </Svg>
     </View>
@@ -32,8 +32,9 @@ export function Logo() {
 const styles = StyleSheet.create({
   logo: {
     backgroundColor: 'transparent',
-    width: '100%',
-    height: 24,
-    paddingHorizontal: 32,
+    height: 32,
+    position: 'absolute',
+    left: 32,
+    top: 16,
   },
 });

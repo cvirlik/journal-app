@@ -1,4 +1,3 @@
-import Svg, { Circle } from 'react-native-svg';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +11,7 @@ import { Text, View } from '@/components/Themed';
 import { Separator } from '@/components/Separator';
 import { SearchBar } from '@/components/SearchBar';
 import { RichView } from '@/components/RichView';
+import { Avatar } from '@/components/Avatar';
 
 export default function TabThreeScreen() {
   const theme = useTheme().theme;
@@ -26,52 +26,43 @@ export default function TabThreeScreen() {
 
   return (
     <>
-      <RichView
-        primaryChildren={
-          <View style={{ backgroundColor: 'transparent' }}>
-            <Text style={styles.label}>Kontakty</Text>
-          </View>
-        }
-        secondaryChildren={
-          <View style={styles.circleContainer}>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: 8,
-              }}
+      <RichView title="Kontakty">
+        <View style={styles.circleContainer}>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <SearchBar onSearch={setSearchQuery} />
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: theme.colors.tintOK }]}
+              onPressIn={() => setModalContactsVisible(true)}
             >
-              <SearchBar onSearch={setSearchQuery} />
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: theme.colors.tintOK }]}
-                onPressIn={() => setModalContactsVisible(true)}
-              >
-                <Ionicons name="add" size={20} color="black" />
-              </TouchableOpacity>
-            </View>
-
-            {filteredContacts.length === 0 ? (
-              <Text
-                style={[styles.noContactsText, { color: theme.colors.secondaryText }]}
-              >{`Žádný takový kontakt neexistuje :(`}</Text>
-            ) : (
-              filteredContacts.map((item, index) => (
-                <View key={index} style={{ alignItems: 'center', gap: 6 }}>
-                  <View style={styles.circleWrapper}>
-                    <Svg height="64" width="64">
-                      <Circle cx="32" cy="32" r="32" fill={item.avatarColor} />
-                    </Svg>
-                    <Text style={styles.circleLabel}>{item.name}</Text>
-                  </View>
-                  {index < filteredContacts.length - 1 && <Separator />}
-                </View>
-              ))
-            )}
+              <Ionicons name="add" size={20} color="black" />
+            </TouchableOpacity>
           </View>
-        }
-      />
+
+          {filteredContacts.length === 0 ? (
+            <Text
+              style={[styles.noContactsText, { color: theme.colors.secondaryText }]}
+            >{`Žádný takový kontakt neexistuje :(`}</Text>
+          ) : (
+            filteredContacts.map((item, index) => (
+              <View key={index} style={{ alignItems: 'center', gap: 6 }}>
+                <View style={styles.circleWrapper}>
+                  <Avatar size={64} cxyr={32} image={data.photos[index].image} />
+                  <Text style={styles.circleLabel}>{item.name}</Text>
+                </View>
+                {index < filteredContacts.length - 1 && <Separator />}
+              </View>
+            ))
+          )}
+        </View>
+      </RichView>
       {modalContactsVisible && (
         <AddContactsModal
           onConfirm={(user: User) => {

@@ -7,7 +7,7 @@ import CallModal from '../call-modal';
 
 import { useSelectedUser } from '@/providers/SelectedUserProvider';
 import { useMocapData } from '@/providers/MocapDataProviders';
-import { Text, View } from '@/components/Themed';
+import { View } from '@/components/Themed';
 import { RichView } from '@/components/RichView';
 import { PersonCard } from '@/components/PersonCard';
 
@@ -20,25 +20,18 @@ export default function TabTwoScreen() {
   const [modalOKVisible, setModalOKVisible] = useState(false);
   return (
     <>
-      <RichView
-        primaryChildren={
-          <View style={{ backgroundColor: 'transparent' }}>
-            <Text style={styles.label}>Události</Text>
-          </View>
-        }
-        secondaryChildren={
-          <View style={styles.container}>
-            {sortedData.map((person, index) => (
-              <PersonCard
-                key={index}
-                {...person}
-                setModalOKVisible={setModalOKVisible}
-                setModalCallVisible={setModalCallVisible}
-              />
-            ))}
-          </View>
-        }
-      />
+      <RichView title="Události">
+        <View style={styles.container}>
+          {sortedData.map((person, index) => (
+            <PersonCard
+              key={index}
+              {...person}
+              setModalOKVisible={setModalOKVisible}
+              setModalCallVisible={setModalCallVisible}
+            />
+          ))}
+        </View>
+      </RichView>
       {modalCallVisible && (
         <CallModal
           onConfirm={() => {
@@ -58,7 +51,7 @@ export default function TabTwoScreen() {
               editItem('actions', index, {
                 ...data.actions[index],
                 pending: false,
-                whoSolve: 'me',
+                whoSolve: 'ja',
               });
             }
           }}

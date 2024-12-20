@@ -56,7 +56,7 @@ function RootLayoutNav() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="new-activity-screen"
-              options={{ presentation: 'transparentModal', headerShown: false }}
+              options={{ presentation: 'modal', headerShown: false }}
             />
             <Stack.Screen
               name="call-screen"

@@ -1,17 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import { useRef, useEffect } from 'react';
 
 import { View } from './Themed';
 import { Task } from './Task';
 import { Hour } from './Hour';
 
+import { useTheme } from '@/providers/ThemeProvider';
 import { useMocapData } from '@/providers/MocapDataProviders';
 
 export function Calendar() {
   const { data } = useMocapData();
+  const { theme } = useTheme();
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  const hours = [
-    6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5,
-  ];
+  const hours = Array.from({ length: 24 }, (_, i) => i);
 
   const getType = (hour: number): 'sunrise' | 'sun' | 'sunset' | 'moon' | null => {
     if (hour === 6) return 'sunrise';
@@ -21,29 +23,44 @@ export function Calendar() {
     return null;
   };
 
-  return (
-    <View style={styles.container}>
-      {hours.map(hour => (
-        <Hour key={hour} hour={hour} last={hour === 5} type={getType(hour)} />
-      ))}
-      {data.tasks.map((task, index) => {
-        const hourStart = task.timeStart.getHours();
-        const minutesStart = task.timeStart.getMinutes();
-        const hourEnd = task.timeEnd.getHours();
-        const minutesEnd = task.timeEnd.getMinutes();
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    const scrollOffset = currentHour * 60; // Assuming each hour has a height of 60
+    scrollViewRef.current?.scrollTo({ y: scrollOffset, animated: true });
+  }, []);
 
-        return (
-          <Task
-            key={index}
-            title={task.name}
-            hourIndexStart={hours.indexOf(hourStart)}
-            minutesStart={minutesStart}
-            hourIndexEnd={hours.indexOf(hourEnd)}
-            minutesEnd={minutesEnd}
-          />
-        );
-      })}
-    </View>
+  return (
+    <ScrollView
+      ref={scrollViewRef}
+      style={{
+        borderRadius: 16,
+        backgroundColor: theme.colors.backgroundScroll,
+        width: '100%',
+      }}
+    >
+      <View style={styles.container}>
+        {hours.map(hour => (
+          <Hour key={hour} hour={hour} last={hour === 23} type={getType(hour)} />
+        ))}
+        {data.tasks.map((task, index) => {
+          const hourStart = task.timeStart.getHours();
+          const minutesStart = task.timeStart.getMinutes();
+          const hourEnd = task.timeEnd.getHours();
+          const minutesEnd = task.timeEnd.getMinutes();
+
+          return (
+            <Task
+              key={index}
+              title={task.name}
+              hourIndexStart={hours.indexOf(hourStart)}
+              minutesStart={minutesStart}
+              hourIndexEnd={hours.indexOf(hourEnd)}
+              minutesEnd={minutesEnd}
+            />
+          );
+        })}
+      </View>
+    </ScrollView>
   );
 }
 

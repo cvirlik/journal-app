@@ -14,9 +14,9 @@ export function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {
       <Ionicons name="search" size={20} color="black" />
       <TextInput
         style={[styles.searchInput]}
-        placeholder="Search"
+        placeholder="Hledat"
         onChangeText={onSearch}
-        placeholderTextColor="#aaa"
+        placeholderTextColor="gray"
       />
     </View>
   );

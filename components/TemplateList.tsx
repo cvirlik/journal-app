@@ -22,6 +22,14 @@ export default function TemplateList(props: TemplateListProps) {
 
   const theme = useTheme().theme;
 
+  const repeatTranslations: Record<string, string> = {
+    day: 'denně',
+    week: 'týdně',
+    month: 'měsíčně',
+    year: 'ročně',
+    never: 'nikdy',
+  };
+
   return (
     <Modal onClose={() => props.onClose(false)}>
       <TouchableOpacity
@@ -42,7 +50,7 @@ export default function TemplateList(props: TemplateListProps) {
           textAlign: 'center',
         }}
       >
-        Templates
+        Šablony
       </Text>
       <ScrollView contentContainerStyle={{ gap: 8 }}>
         {templates.map((item, index) => (
@@ -58,7 +66,7 @@ export default function TemplateList(props: TemplateListProps) {
             >
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
               <Text>{item.description}</Text>
-              <Text>Repeat: {item.repeat ?? 'never'}</Text>
+              <Text>Opakování: {repeatTranslations[item.repeat ?? 'never']}</Text>
             </TouchableOpacity>
             {index !== templates.length - 1 && <Separator />}
           </View>

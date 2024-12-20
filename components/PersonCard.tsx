@@ -1,4 +1,3 @@
-import Svg, { Circle } from 'react-native-svg';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -12,10 +11,11 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { Text, View } from './Themed';
 import { RichButton } from './RichButton';
+import { Avatar } from './Avatar';
 
 import { useTheme } from '@/providers/ThemeProvider';
 import { useSelectedUser } from '@/providers/SelectedUserProvider';
-import type { Actions } from '@/providers/MocapDataProviders';
+import { useMocapData, type Actions } from '@/providers/MocapDataProviders';
 
 function getTimeDifferenceInHours(targetDate: string) {
   const now = new Date(); // Current date and time
@@ -34,6 +34,9 @@ type PersonCardProps = Actions & {
 
 export const PersonCard = React.memo(function PersonCard(props: PersonCardProps) {
   const theme = useTheme().theme;
+  const { data } = useMocapData();
+
+  const photoIndex = data.contacts.findIndex(contact => contact.name === props.whos);
 
   const set = useSelectedUser().set;
 
@@ -125,9 +128,7 @@ export const PersonCard = React.memo(function PersonCard(props: PersonCardProps)
       </View>
       <View style={{ padding: 16, alignItems: 'center', gap: 8 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', gap: 16 }}>
-          <Svg height="92" width="92">
-            <Circle cx="46" cy="46" r="46" fill="pink" />
-          </Svg>
+          <Avatar size={92} cxyr={46} image={data.photos[photoIndex].image} />
           <View style={{ flexDirection: 'column', width: '60%' }}>
             <Text style={styles.name}>{props.whos}</Text>
             <Text style={styles.log}>{props.pending ? props.lastAction : props.note}</Text>

@@ -1,55 +1,25 @@
-import Animated, { useAnimatedStyle, useSharedValue, interpolate } from 'react-native-reanimated';
-import { FlatList, Text, StyleSheet, Dimensions } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import PagerView from 'react-native-pager-view';
+import { Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+
+import { View } from './Themed';
+import { Calendar } from './Calendar';
+
+import { useTheme } from '@/providers/ThemeProvider';
 
 const { width } = Dimensions.get('window');
 const itemWidth = width / 3;
-const spacing = 16;
 
-// Define a type for the date item
 type DateItem = {
   day: string;
   date: string;
   year: string;
 };
 
-// DateItemComponent renders a single date item
-const DateItemComponent = ({
-  item,
-  index,
-  scrollX,
-  selectedIndex,
-}: {
-  item: DateItem;
-  index: number;
-  scrollX: any;
-  selectedIndex: number;
-}) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    const inputRange = [
-      (index - 1) * (itemWidth + spacing),
-      index * (itemWidth + spacing),
-      (index + 1) * (itemWidth + spacing),
-    ];
-
-    const scale = interpolate(scrollX.value, inputRange, [0.8, 1, 0.8], 'clamp');
-
-    return {
-      transform: [{ scale }],
-      opacity: selectedIndex === index ? 1 : 0.7, // Highlight the selected item
-    };
-  });
-
-  return (
-    <Animated.View style={[styles.item, animatedStyle, { width: itemWidth }]}>
-      <Text style={styles.day}>{item.day}</Text>
-      <Text style={styles.date}>{item.date}</Text>
-      <Text style={styles.year}>{item.year}</Text>
-    </Animated.View>
-  );
-};
-
 export function DateScroller() {
+  const { theme } = useTheme();
+
   const dates: DateItem[] = [
     { day: 'Pondělí', date: '25. Listopadu', year: '2024' },
     { day: 'Úterý', date: '26. Listopadu', year: '2024' },
@@ -59,68 +29,94 @@ export function DateScroller() {
     { day: 'Neděle', date: '24. Listopadu', year: '2024' },
   ];
 
-  const scrollX = useSharedValue(0);
-  const flatListRef = useRef<FlatList<DateItem>>(null); // Type definition for FlatList
-  const [selectedIndex, setSelectedIndex] = useState(2); // Start with the 3rd item (index 2)
+  const pagerViewRef = useRef<PagerView>(null);
+  const [selectedIndex, setSelectedIndex] = useState(2);
 
-  // Initial scroll to center the 3rd item (index 2)
   useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({
-        offset: selectedIndex * (itemWidth + spacing),
-        animated: false, // Disable animation for initial scroll
-      });
+    if (pagerViewRef.current) {
+      pagerViewRef.current.setPage(selectedIndex);
     }
   }, [selectedIndex]);
 
-  const handleScrollEndDrag = (event: any) => {
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.floor(contentOffsetX / (itemWidth + spacing));
-    setSelectedIndex(index); // Update the selected index after scrolling ends
+  const handlePageSelected = (event: any) => {
+    const index = event.nativeEvent.position;
+    setSelectedIndex(index);
   };
 
   return (
-    <FlatList
-      ref={flatListRef}
-      data={dates}
-      renderItem={({ item, index }) => (
-        <DateItemComponent
-          item={item}
-          index={index}
-          scrollX={scrollX}
-          selectedIndex={selectedIndex}
-        />
-      )}
-      keyExtractor={(_, index) => index.toString()}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      snapToInterval={itemWidth + spacing} // Snapping interval
-      snapToAlignment="center"
-      decelerationRate="fast"
-      contentContainerStyle={{
-        paddingHorizontal: (width - itemWidth) / 2, // Centering the items within the FlatList container
-      }}
-      getItemLayout={(data, index) => ({
-        length: itemWidth + spacing,
-        offset: (itemWidth + spacing) * index,
-        index,
-      })}
-      onScroll={event => {
-        scrollX.value = event.nativeEvent.contentOffset.x; // Track scroll position
-      }}
-      scrollEventThrottle={16}
-      onScrollEndDrag={handleScrollEndDrag} // Update selected index after scrolling ends
-    />
+    <View style={{ width: '100%', height: '100%' }}>
+      <PagerView
+        ref={pagerViewRef}
+        style={styles.pagerView}
+        initialPage={selectedIndex}
+        onPageSelected={handlePageSelected}
+      >
+        {dates.map((item, index) => (
+          <View
+            key={index}
+            style={{
+              alignItems: 'center',
+              width: '100%',
+              height: '100%',
+              gap: 8,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '100%',
+                justifyContent: 'space-between',
+                paddingHorizontal: 16,
+              }}
+            >
+              <TouchableOpacity
+                disabled={index === 0}
+                onPressIn={() => setSelectedIndex(selectedIndex - 1)}
+              >
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={index === 0 ? theme.colors.backgroundScroll : 'black'}
+                />
+              </TouchableOpacity>
+              <View style={[styles.item, { width: itemWidth }]}>
+                <Text style={styles.day}>{item.day}</Text>
+                <Text style={styles.date}>{item.date}</Text>
+                <Text style={styles.year}>{item.year}</Text>
+              </View>
+              <TouchableOpacity
+                disabled={index === dates.length - 1}
+                onPressIn={() => setSelectedIndex(selectedIndex + 1)}
+              >
+                <Ionicons
+                  name="chevron-forward"
+                  size={24}
+                  color={index === dates.length - 1 ? theme.colors.backgroundScroll : 'black'}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.calendar}>
+              <Calendar />
+            </View>
+          </View>
+        ))}
+      </PagerView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  pagerView: {
+    flex: 1,
+  },
   item: {
-    marginHorizontal: spacing / 2, // Apply margin to each item for proper spacing
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 5,
+    alignSelf: 'center',
+    borderRadius: 8,
     padding: 10,
+    textAlign: 'center',
   },
   day: {
     fontSize: 26,
@@ -132,5 +128,12 @@ const styles = StyleSheet.create({
   year: {
     fontSize: 14,
     color: 'gray',
+  },
+  calendar: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    flex: 1,
   },
 });
