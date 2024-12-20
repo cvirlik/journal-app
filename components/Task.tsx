@@ -1,5 +1,5 @@
 import { CheckBox } from 'react-native-elements';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 
 import { View } from './Themed';
@@ -49,10 +49,10 @@ export function Task({ title, hourIndexStart, minutesStart, hourIndexEnd, minute
         containerStyle={styles.checkboxContainer}
         wrapperStyle={styles.checkboxWrapper}
         checked={done}
-        onPress={() => {
+        onPressIn={() => {
           const index = data.tasks.findIndex(item => item.name === title);
           editItem('tasks', index, { ...data.tasks[index], completed: !done });
-          setDone(!done);
+          setDone(c => !c);
         }}
       />
     </View>

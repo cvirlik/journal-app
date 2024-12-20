@@ -75,7 +75,7 @@ export default function NewActivityScreen() {
                   flexDirection: 'row',
                   direction: 'rtl',
                 }}
-                onPress={() => setModalVisible(true)}
+                onPressIn={() => setModalVisible(true)}
               >
                 <Text style={{ color: theme.colors.tintPrimary }}>Zvolit šablonu</Text>
               </TouchableOpacity>
@@ -271,7 +271,7 @@ export default function NewActivityScreen() {
               <CheckBox
                 title="Uložit jako šablonu?"
                 checked={isTemplate}
-                onPress={() => setTemplate(!isTemplate)}
+                onPressIn={() => setTemplate(!isTemplate)}
                 checkedColor={theme.colors.backgroundScroll}
                 uncheckedColor={theme.colors.backgroundScroll}
                 textStyle={{ fontWeight: 'normal' }}
@@ -291,13 +291,11 @@ export default function NewActivityScreen() {
                 <CheckBox
                   title="Před naplánovaným časem"
                   checked={beforeNotification}
-                  onPress={() => setBeforeNotification(!beforeNotification)}
+                  onPressIn={() => setBeforeNotification(!beforeNotification)}
                   checkedColor={theme.colors.tintOK}
                   uncheckedColor={theme.colors.backgroundScroll}
                   textStyle={{ fontWeight: 'normal', marginLeft: 0 }}
                   wrapperStyle={{ justifyContent: 'space-between' }}
-                  uncheckedIcon="circle-o"
-                  checkedIcon="dot-circle-o"
                   containerStyle={{
                     backgroundColor: theme.colors.defaultBackground,
                     borderWidth: 0,
@@ -311,7 +309,7 @@ export default function NewActivityScreen() {
                 <CheckBox
                   title="Po skončení aktivity"
                   checked={afterNotification}
-                  onPress={() => setAfterNotification(!afterNotification)}
+                  onPressIn={() => setAfterNotification(!afterNotification)}
                   checkedColor={theme.colors.tintOK}
                   uncheckedColor={theme.colors.backgroundScroll}
                   textStyle={{
@@ -320,8 +318,6 @@ export default function NewActivityScreen() {
                     marginLeft: 0,
                   }}
                   wrapperStyle={{ justifyContent: 'space-between' }}
-                  uncheckedIcon="circle-o"
-                  checkedIcon="dot-circle-o"
                   containerStyle={{
                     backgroundColor: theme.colors.defaultBackground,
                     borderWidth: 0,
