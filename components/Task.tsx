@@ -13,12 +13,20 @@ type TaskProps = {
   hourIndexEnd: number;
   minutesStart: number;
   minutesEnd: number;
+  ready: boolean;
 };
-export function Task({ title, hourIndexStart, minutesStart, hourIndexEnd, minutesEnd }: TaskProps) {
+export function Task({
+  title,
+  hourIndexStart,
+  minutesStart,
+  hourIndexEnd,
+  minutesEnd,
+  ready,
+}: TaskProps) {
   const theme = useTheme().theme;
   const { data, editItem } = useMocapData();
 
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState(ready);
 
   const start = hourIndexStart * 60 + minutesStart;
   const end = hourIndexEnd * 60 + minutesEnd;

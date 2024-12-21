@@ -7,6 +7,7 @@ import { View } from './Themed';
 import { Calendar } from './Calendar';
 
 import { useTheme } from '@/providers/ThemeProvider';
+import { useMocapData } from '@/providers/MocapDataProviders';
 
 const { width } = Dimensions.get('window');
 const itemWidth = width / 3;
@@ -15,22 +16,57 @@ type DateItem = {
   day: string;
   date: string;
   year: string;
+  dateFull: Date;
+};
+
+const getDaysBetweenDates = (startDate: Date, endDate: Date): Date[] => {
+  const days: Date[] = [];
+  const currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    days.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+  }
+
+  return days;
 };
 
 export function DateScroller() {
   const { theme } = useTheme();
+  const { data } = useMocapData();
 
-  const dates: DateItem[] = [
-    { day: 'Pondělí', date: '25. Listopadu', year: '2024' },
-    { day: 'Úterý', date: '26. Listopadu', year: '2024' },
-    { day: 'Středa', date: '27. Listopadu', year: '2024' },
-    { day: 'Čtvrtek', date: '28. Listopadu', year: '2024' },
-    { day: 'Pátek', date: '29. Listopadu', year: '2024' },
-    { day: 'Neděle', date: '24. Listopadu', year: '2024' },
-  ];
+  const getSortedTasks = () => {
+    const sortedTasks = [...data.tasks];
+    sortedTasks.sort((a, b) => a.date.getTime() - b.date.getTime());
+    return sortedTasks;
+  };
+
+  const getDateRange = (): Date[] => {
+    const tasks = getSortedTasks();
+    if (tasks.length === 0) return [];
+
+    const firstTaskDate = tasks[0].date;
+    const latestTaskDate = new Date(
+      Math.max(new Date().getTime(), new Date(tasks[tasks.length - 1].date).getTime()),
+    );
+
+    return getDaysBetweenDates(firstTaskDate, latestTaskDate);
+  };
+
+  const dates: DateItem[] = getDateRange().map(date => ({
+    day:
+      date.toLocaleDateString('cs-CZ', { weekday: 'long' }).charAt(0).toUpperCase() +
+      date.toLocaleDateString('cs-CZ', { weekday: 'long' }).slice(1),
+    date: date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long' }),
+    year: date.getFullYear().toString(),
+    dateFull: date,
+  }));
 
   const pagerViewRef = useRef<PagerView>(null);
-  const [selectedIndex, setSelectedIndex] = useState(2);
+  const todayIndex = dates.findIndex(
+    item => item.dateFull.toDateString() === new Date().toDateString(),
+  );
+  const [selectedIndex, setSelectedIndex] = useState(todayIndex);
 
   useEffect(() => {
     if (pagerViewRef.current) {
@@ -97,7 +133,7 @@ export function DateScroller() {
               </TouchableOpacity>
             </View>
             <View style={styles.calendar}>
-              <Calendar />
+              <Calendar date={item.dateFull} />
             </View>
           </View>
         ))}

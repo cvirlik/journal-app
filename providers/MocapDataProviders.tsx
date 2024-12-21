@@ -64,7 +64,8 @@ const MocapDataContext = React.createContext<{
 
 export function MocapDataProvider(props: React.PropsWithChildren) {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(today.getDate() - 7);
   const [data, setData] = useState<MocapData>({
     contacts: [
       {
@@ -119,32 +120,100 @@ export function MocapDataProvider(props: React.PropsWithChildren) {
       {
         name: 'Ranní běh',
         description: 'Jděte si zaběhat ráno',
-        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 8, 0),
-        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 0),
+        timeStart: new Date(
+          sevenDaysAgo.getFullYear(),
+          sevenDaysAgo.getMonth(),
+          sevenDaysAgo.getDate(),
+          8,
+          0,
+        ),
+        timeEnd: new Date(
+          sevenDaysAgo.getFullYear(),
+          sevenDaysAgo.getMonth(),
+          sevenDaysAgo.getDate(),
+          9,
+          0,
+        ),
+        date: sevenDaysAgo,
+        completed: true,
+      },
+      {
+        name: 'Ranní běh',
+        description: 'Jděte si zaběhat ráno',
+        timeStart: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          8,
+          0,
+        ),
+        timeEnd: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          9,
+          0,
+        ),
         date: today,
         completed: false,
       },
       {
         name: 'Péče o sebe',
         description: 'Věnujte čas péči o sebe',
-        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 0),
-        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 15),
+        timeStart: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          9,
+          0,
+        ),
+        timeEnd: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          9,
+          15,
+        ),
         date: today,
         completed: false,
       },
       {
         name: 'Týmová schůzka',
         description: 'Zúčastněte se týmové schůzky',
-        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 10),
-        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0),
+        timeStart: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          11,
+          10,
+        ),
+        timeEnd: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          12,
+          0,
+        ),
         date: today,
         completed: false,
       },
       {
         name: 'Přestávka na oběd',
         description: 'Dejte si přestávku na oběd',
-        timeStart: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 13, 30),
-        timeEnd: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 30),
+        timeStart: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          13,
+          30,
+        ),
+        timeEnd: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          15,
+          30,
+        ),
         date: today,
         completed: false,
       },

@@ -8,8 +8,15 @@ import { Hour } from './Hour';
 import { useTheme } from '@/providers/ThemeProvider';
 import { useMocapData } from '@/providers/MocapDataProviders';
 
-export function Calendar() {
+type CalendarProps = {
+  date: Date;
+};
+
+export function Calendar({ date }: CalendarProps) {
   const { data } = useMocapData();
+  const tasks = data.tasks.filter(
+    task => new Date(task.date).toDateString() === date.toDateString(),
+  );
   const { theme } = useTheme();
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -25,7 +32,7 @@ export function Calendar() {
 
   useEffect(() => {
     const currentHour = new Date().getHours();
-    const scrollOffset = currentHour * 60; // Assuming each hour has a height of 60
+    const scrollOffset = currentHour * 60;
     scrollViewRef.current?.scrollTo({ y: scrollOffset, animated: true });
   }, []);
 
@@ -42,7 +49,7 @@ export function Calendar() {
         {hours.map(hour => (
           <Hour key={hour} hour={hour} last={hour === 23} type={getType(hour)} />
         ))}
-        {data.tasks.map((task, index) => {
+        {tasks.map((task, index) => {
           const hourStart = task.timeStart.getHours();
           const minutesStart = task.timeStart.getMinutes();
           const hourEnd = task.timeEnd.getHours();
@@ -56,6 +63,7 @@ export function Calendar() {
               minutesStart={minutesStart}
               hourIndexEnd={hours.indexOf(hourEnd)}
               minutesEnd={minutesEnd}
+              ready={task.completed}
             />
           );
         })}
